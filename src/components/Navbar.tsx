@@ -1,129 +1,104 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
   { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
   { name: "Experience", href: "#experience" },
-  { name: "Projects", href: "#projects" },
+  { name: "Work", href: "#projects" },
   { name: "Contact", href: "#contact" },
 ];
 
 export const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isOpen, setIsOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-
-      // Update active section based on scroll position
-      const sections = navLinks.map(link => link.href.substring(1));
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark");
-  };
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (latest > previous && latest > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "glass-card border-b py-3"
-          : "bg-transparent py-5"
-      }`}
+    <motion.nav
+      variants={{
+        visible: { y: 0 },
+        hidden: { y: "-100%" },
+      }}
+      animate={hidden ? "hidden" : "visible"}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      className="fixed w-full top-0 z-50 bg-[#0a192f]/90 backdrop-blur-sm shadow-lg"
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <a href="#home" className="text-2xl font-bold gradient-text">
+      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#" className="text-[#64ffda] font-mono text-xl font-bold border-2 border-[#64ffda] p-1 rounded">
           AK
         </a>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                activeSection === link.href.substring(1)
-                  ? "text-primary"
-                  : "text-foreground"
-              }`}
-            >
-              {link.name}
-            </a>
-          ))}
+          <ul className="flex gap-8">
+            {navLinks.map((link, index) => (
+              <li key={link.name}>
+                <a
+                  href={link.href}
+                  className="text-[#ccd6f6] hover:text-[#64ffda] font-mono text-sm transition-colors"
+                >
+                  <span className="text-[#64ffda] mr-1">0{index + 1}.</span>
+                  {link.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#64ffda] border border-[#64ffda] px-4 py-2 rounded font-mono text-sm hover:bg-[#64ffda]/10 transition-colors"
+          >
+            Resume
+          </a>
         </div>
 
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className="rounded-full"
-          >
-            {theme === "light" ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
-          </Button>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden rounded-full"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-[#64ffda]"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X /> : <Menu />}
+        </button>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden glass-card mt-4 mx-4 rounded-lg p-4 animate-slide-up">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`block py-3 text-sm font-medium transition-colors hover:text-primary ${
-                activeSection === link.href.substring(1)
-                  ? "text-primary"
-                  : "text-foreground"
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {link.name}
-            </a>
-          ))}
+      {/* Mobile Menu Overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-[#0a192f] z-40 flex flex-col items-center justify-center md:hidden">
+          <ul className="space-y-8 text-center">
+            {navLinks.map((link, index) => (
+              <li key={link.name}>
+                <a
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="text-[#ccd6f6] hover:text-[#64ffda] font-mono text-lg block"
+                >
+                  <span className="text-[#64ffda] block text-sm mb-1">0{index + 1}.</span>
+                  {link.name}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a
+                href="/resume.pdf"
+                className="text-[#64ffda] border border-[#64ffda] px-8 py-3 rounded font-mono text-lg hover:bg-[#64ffda]/10 transition-colors inline-block mt-4"
+              >
+                Resume
+              </a>
+            </li>
+          </ul>
         </div>
       )}
-    </nav>
+    </motion.nav>
   );
 };

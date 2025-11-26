@@ -1,93 +1,99 @@
-import { Briefcase, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
 
-const experiences = [
+const jobs = [
   {
     title: "Flutter Developer",
     company: "KamahTech",
-    period: "Present",
-    type: "On-site",
+    date: "2024 - Present",
     description: [
-      "Developed and maintained cross-platform applications using Flutter & Dart",
-      "Integrated mobile apps with Odoo ERP system",
-      "Implemented responsive UI/UX with modern design practices",
-      "Used Bloc/Cubit for scalable state management",
-      "Performed code reviews & followed Clean Architecture & SOLID principles",
-      "Worked in agile sprints with continuous deployment",
+      "Developed and maintained cross-platform mobile applications using Flutter and Dart",
+      "Implemented clean architecture principles and state management solutions (Bloc, Cubit, Provider)",
+      "Integrated RESTful APIs and Firebase services for real-time data synchronization",
+      "Collaborated with design teams to create pixel-perfect, responsive UI/UX implementations",
+      "Published multiple applications to Google Play Store and Apple App Store"
     ],
+    tech: ["Flutter", "Dart", "Firebase", "Bloc"]
   },
   {
-    title: "Flutter Developer (Internship)",
-    company: "Five Software Solutions",
-    period: "Oct 2024 – Jan 2025",
-    type: "Remote",
+    title: "Mobile Application Developer",
+    company: "Freelance",
+    date: "2023 - 2024",
     description: [
-      "Built high-performance Flutter apps with secure API integration",
-      "Integrated payment gateways for seamless transactions",
-      "Worked with CI/CD pipelines for automated deployments",
-      "Improved code quality through debugging and testing",
+      "Built custom mobile applications for various clients using Flutter framework",
+      "Designed and implemented scalable app architectures with clean code principles",
+      "Integrated third-party APIs and services including payment gateways and social media",
+      "Optimized app performance and implemented caching strategies for offline functionality",
+      "Provided ongoing maintenance and feature updates for deployed applications"
     ],
+    tech: ["Flutter", "Dart", "REST APIs", "Provider"]
   },
+  {
+    title: "Junior Flutter Developer",
+    company: "Training & Projects",
+    date: "2022 - 2023",
+    description: [
+      "Completed comprehensive Flutter development training and certification courses",
+      "Built multiple practice projects including e-commerce apps, chat applications, and medical apps",
+      "Learned and implemented state management patterns and clean architecture",
+      "Gained experience with Git version control and collaborative development workflows",
+      "Studied mobile app design principles and user experience best practices"
+    ],
+    tech: ["Flutter", "Dart", "Git", "Firebase"]
+  }
 ];
 
 export const Experience = () => {
   return (
-    <section id="experience" className="py-20">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Work <span className="gradient-text">Experience</span>
+    <section id="experience" className="py-20 bg-[#0a192f] text-[#8892b0]">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center gap-4 mb-12"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-[#ccd6f6]">
+            <span className="text-[#64ffda] font-mono text-xl mr-2">02.</span>
+            Where I've Worked
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            My professional journey in mobile app development
-          </p>
-        </div>
+          <div className="h-[1px] bg-[#233554] flex-grow max-w-xs"></div>
+        </motion.div>
 
-        <div className="max-w-4xl mx-auto relative">
-          {/* Timeline Line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-primary hidden sm:block" />
-
-          <div className="space-y-12">
-            {experiences.map((exp, index) => (
-              <div
-                key={index}
-                className={`relative animate-slide-up ${
-                  index % 2 === 0 ? "md:pr-1/2 md:text-right" : "md:pl-1/2 md:ml-auto"
-                }`}
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                {/* Timeline Dot */}
-                <div className="absolute left-8 md:left-1/2 top-6 w-4 h-4 bg-primary rounded-full -translate-x-1/2 ring-4 ring-background hidden sm:block" />
-
-                <div className="glass-card rounded-2xl p-6 ml-16 sm:ml-0 hover:shadow-hover transition-all">
-                  <div className={`flex items-start gap-4 ${index % 2 === 1 ? "md:flex-row-reverse md:text-left" : ""}`}>
-                    <div className="p-3 rounded-full bg-gradient-primary shrink-0">
-                      <Briefcase className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-1">{exp.title}</h3>
-                      <p className="text-primary font-semibold mb-2">{exp.company}</p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 flex-wrap">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          <span>{exp.period}</span>
-                        </div>
-                        <span>•</span>
-                        <span>{exp.type}</span>
-                      </div>
-                      <ul className="space-y-2">
-                        {exp.description.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm">
-                            <span className="text-primary mt-1">▹</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+        <div className="space-y-12">
+          {jobs.map((job, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="group"
+            >
+              <div className="flex flex-col md:flex-row md:items-baseline gap-2 mb-2">
+                <h3 className="text-xl font-bold text-[#ccd6f6] group-hover:text-[#64ffda] transition-colors">
+                  {job.title}
+                </h3>
+                <span className="text-[#64ffda] font-mono">@ {job.company}</span>
               </div>
-            ))}
-          </div>
+              <p className="font-mono text-sm mb-4">{job.date}</p>
+              <ul className="space-y-2 mb-4">
+                {job.description.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-[#64ffda] mt-1">▹</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-2">
+                {job.tech.map((tech, i) => (
+                  <span key={i} className="text-xs font-mono text-[#64ffda] bg-[#64ffda]/10 px-2 py-1 rounded">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
